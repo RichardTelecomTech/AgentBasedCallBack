@@ -1,0 +1,154 @@
+workflow:
+  name: agent own callback
+  division: Home
+  startUpRef: "/workflow/states/state[Initial State_10]"
+  defaultLanguage: en-au
+  supportedLanguages:
+    en-au:
+      none: true
+  variables:
+    - stringVariable:
+        name: Flow.conversationId
+        initialValue:
+          noValue: true
+        isInput: true
+        isOutput: true
+    - stringVariable:
+        name: Flow.queueId
+        initialValue:
+          noValue: true
+        isInput: true
+        isOutput: true
+  settingsErrorHandling:
+    errorHandling:
+      endWorkflow:
+        none: true
+  states:
+    - state:
+        name: Initial State
+        refId: Initial State_10
+        actions:
+          - decision:
+              name: NZ Advice
+              condition:
+                exp: Flow.queueId=="62f00508-19ce-4fef-b7af-eb33317f23a3"
+              outputs:
+                "yes":
+                  actions:
+                    - wait:
+                        name: Wait
+                        trimDurationNearMaxRunningTime:
+                          lit: false
+                        duration:
+                          lit:
+                            hours: 2
+                    - callData:
+                        name: Call Data Action
+                        timeout:
+                          lit:
+                            minutes: 1
+                        category:
+                          Genesys Cloud Data Actions:
+                            dataAction:
+                              Update skillset of a conversation:
+                                inputs:
+                                  ConversationID:
+                                    exp: Flow.conversationId
+                                  SkillsetID:
+                                    lit: b99ac91d-377b-46a2-b9ef-8268d81816c9
+                                failureOutputs:
+                                  errorCode:
+                                    noValue: true
+                                  status:
+                                    noValue: true
+                                  correlationId:
+                                    noValue: true
+                                  entityId:
+                                    noValue: true
+                                  entityName:
+                                    noValue: true
+                                  userMessage:
+                                    noValue: true
+                                  userParamsMessage:
+                                    noValue: true
+                                  userParams.key:
+                                    noValue: true
+                                  userParams.value:
+                                    noValue: true
+                                  details.errorCode:
+                                    noValue: true
+                                  details.fieldName:
+                                    noValue: true
+                                  details.entityId:
+                                    noValue: true
+                                  details.entityName:
+                                    noValue: true
+                "no":
+                  actions:
+                    - switch:
+                        name: Switch
+                        evaluate:
+                          firstTrue:
+                            default:
+                              actions:
+                                - endWorkflow:
+                                    name: End Workflow
+                                    exitReason:
+                                      noValue: true
+                            cases:
+                              - case:
+                                  value:
+                                    exp: Flow.queueId=="627f17be-f248-4ef7-9e92-039d3a0562f2"
+                                  actions:
+                                    - wait:
+                                        name: Testing queue
+                                        trimDurationNearMaxRunningTime:
+                                          lit: false
+                                        duration:
+                                          lit:
+                                            minutes: 1
+                                    - callData:
+                                        name: Call Data Action
+                                        timeout:
+                                          lit:
+                                            minutes: 1
+                                        category:
+                                          Genesys Cloud Data Actions:
+                                            dataAction:
+                                              Update skillset of a conversation:
+                                                inputs:
+                                                  ConversationID:
+                                                    exp: Flow.conversationId
+                                                  SkillsetID:
+                                                    lit: b99ac91d-377b-46a2-b9ef-8268d81816c9
+                                                failureOutputs:
+                                                  errorCode:
+                                                    noValue: true
+                                                  status:
+                                                    noValue: true
+                                                  correlationId:
+                                                    noValue: true
+                                                  entityId:
+                                                    noValue: true
+                                                  entityName:
+                                                    noValue: true
+                                                  userMessage:
+                                                    noValue: true
+                                                  userParamsMessage:
+                                                    noValue: true
+                                                  userParams.key:
+                                                    noValue: true
+                                                  userParams.value:
+                                                    noValue: true
+                                                  details.errorCode:
+                                                    noValue: true
+                                                  details.fieldName:
+                                                    noValue: true
+                                                  details.entityId:
+                                                    noValue: true
+                                                  details.entityName:
+                                                    noValue: true
+          - endWorkflow:
+              name: End Workflow
+              exitReason:
+                noValue: true
